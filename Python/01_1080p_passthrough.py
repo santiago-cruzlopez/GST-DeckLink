@@ -1,11 +1,11 @@
-'''
+"""
     1. First code for TESTING the SDI Input and Output using DeckLink with GStreamer
     2. Input[1]: 1080p5994 -> Output[0]: 1080p5994
     3. GStreamer Command:
         gst-launch-1.0 \
         decklinkvideosrc device-number=1 connection=sdi mode=1080p5994 ! decklinkvideosink device-number=0 mode=1080p5994 \
         decklinkaudiosrc device-number=1 ! decklinkaudiosink device-number=0
-'''
+"""
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -76,7 +76,6 @@ def on_message(bus, message, loop):
         print("End of stream")
         loop.quit()
     return True
-
 
 bus.connect("message", on_message, GLib.MainLoop())
 

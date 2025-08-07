@@ -136,17 +136,18 @@ def GStreamer_Pipeline():
     pipeline.add(cudaupload)
     pipeline.add(cudaconvert)
     pipeline.add(capsfilter2)
-    # pipeline.add(identity_gpu)     
+    pipeline.add(identity_gpu)     
     pipeline.add(cudadownload)
     pipeline.add(queue_output)
     pipeline.add(videorate)
     pipeline.add(capsfilter3)
     pipeline.add(videoconvert2)
     pipeline.add(videosink)
+
     # Audio elements to pipeline
-    #pipeline.add(audiosrc)
-    #pipeline.add(queue_audio)
-    #pipeline.add(audiosink)
+    pipeline.add(audiosrc)
+    pipeline.add(queue_audio)
+    pipeline.add(audiosink)
 
     # Link video chain
     videosrc.link(queue_input)
@@ -155,7 +156,7 @@ def GStreamer_Pipeline():
     capsfilter1.link(cudaupload)
     cudaupload.link(cudaconvert)
     cudaconvert.link(capsfilter2)
-    # capsfilter2.link(identity_gpu)       
+    capsfilter2.link(identity_gpu)       
     identity_gpu.link(cudadownload)
     cudadownload.link(queue_output)
     queue_output.link(videorate)
@@ -164,13 +165,11 @@ def GStreamer_Pipeline():
     videoconvert2.link(videosink)
 
     # Add probe to src pad of identity_gpu
-    # identity_gpu.connect("handoff", sdi_frames)
-    # src_pad = identity_gpu.get_static_pad("src")
-    # src_pad.add_probe(Gst.PadProbeType.BUFFER, sdi_frames)
+    identity_gpu.connect("handoff", sdi_frames)
 
     # Link audio chain
-    #audiosrc.link(queue_audio)
-    #queue_audio.link(audiosink)
+    audiosrc.link(queue_audio)
+    queue_audio.link(audiosink)
 
     def on_message(bus, message, loop):
         t = message.type
