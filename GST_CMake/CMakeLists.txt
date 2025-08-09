@@ -18,7 +18,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${FullOutputDir}")
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GST REQUIRED gstreamer-1.0 gstreamer-video-1.0)
 
-
 # Create the executable
 add_executable(
     ${PROJECT_NAME}
