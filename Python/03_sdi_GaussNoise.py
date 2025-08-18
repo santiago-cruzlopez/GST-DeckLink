@@ -30,21 +30,17 @@ import cv2
 import time
 
 def sdi_frames(element, buffer):
-    # Measure processing time
     start_time = time.time()
 
-    # Get video frame properties
     pad = element.get_static_pad("sink")
     caps = pad.get_current_caps()    
     structure = caps.get_structure(0)
     width = structure.get_int("width")[1]
     height = structure.get_int("height")[1]
 
-    # Check if buffer is writable
     if buffer.mini_object.refcount != 1:
         print("Buffer may not be writable (refcount > 1), copying may occur")
     
-    # Map the buffer to access the video frame data
     success, map_info = buffer.map(Gst.MapFlags.READ | Gst.MapFlags.WRITE)
     if success:
         try:
@@ -71,8 +67,6 @@ def sdi_frames(element, buffer):
 def GStreamer_Pipeline():
 
     Gst.init(None)
-
-    # Create pipeline
     pipeline = Gst.Pipeline()
 
     # Video pipeline elements
@@ -166,6 +160,8 @@ def GStreamer_Pipeline():
 
     # Add probe to src pad of identity_gpu
     identity_gpu.connect("handoff", sdi_frames)
+    # src_pad = identity_gpu.get_static_pad("src")
+    # src_pad.add_probe(Gst.PadProbeType.BUFFER, sdi_frames)
 
     # Link audio chain
     audiosrc.link(queue_audio)
@@ -192,7 +188,6 @@ def GStreamer_Pipeline():
     # Start pipeline
     pipeline.set_state(Gst.State.PLAYING)
 
-    # Run main loop
     loop = GLib.MainLoop()
     try:
         loop.run()
