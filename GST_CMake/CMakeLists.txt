@@ -21,7 +21,9 @@ pkg_check_modules(GST REQUIRED gstreamer-1.0 gstreamer-video-1.0)
 # Create the executable
 add_executable(
     ${PROJECT_NAME}
-    main.c
+    
+    01_sdi_base.c
+    # 00_gst_url.c
 )
 
 # Configure include directories
