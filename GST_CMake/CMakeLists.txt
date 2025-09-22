@@ -22,7 +22,8 @@ pkg_check_modules(GST REQUIRED gstreamer-1.0 gstreamer-video-1.0)
 add_executable(
     ${PROJECT_NAME}
     
-    01_sdi_base.c
+    02_sdi_AppLib.c
+    # 01_sdi_base.c
     # 00_gst_url.c
 )
 
