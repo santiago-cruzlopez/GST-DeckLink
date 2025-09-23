@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(DeckLink_SDK)
+project(DeckLink-SDK)
 
 set(OSBitness 32)
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
