@@ -38,3 +38,24 @@ C++ implementation using the Blackmagic Design DeckLink SDK to capture and outpu
 - `bin/`: Houses the compiled executable.
 - `build/`: Temporary build directory (generated during compilation).
 - `CMakeLists.txt`: Defines the build process.     
+
+### Building the Project
+```bash
+cd /path/to/DeckLink_SDK
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+make
+```
+- Execute the binary:
+```bash
+cd ../bin/Linux64/Debug
+./DeckLink-SDK
+```
+- Terminate with Ctrl+C to trigger cleanup, displaying the end time and performance metrics.
+
+### Troubleshooting
+- **Device Not Detected:** Confirm the card appears in `lspci` and add your user to the video group if access is denied: `sudo usermod -aG video $USER`.
+- **API Failures:** Consult `HRESULT` error codes in the DeckLink SDK Manual for debugging.
+- **Compilation Issues:** Ensure the SDK path is correct and headers like `DeckLinkAPI.h` are found.
+- **Runtime Permissions:** Elevated privileges may be needed for hardware interaction in some setups.
