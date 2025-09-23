@@ -20,8 +20,8 @@ C++ implementation using the Blackmagic Design DeckLink SDK to capture and outpu
     - Restart your system to load the drivers.
     - Confirm installation by running `lspci | grep Blackmagic` or using the Blackmagic Desktop Video Setup utility.
     - Check that `libDeckLinkAPI.so` is installed in the system as well, run `ls -l /usr/lib | grep libDeckLink` for verification.
-2. Obtain the DeckLink SDK:
-    - Download the DeckLink SDK from the official developer page.
+2. Obtain the Desktop Video SDK:
+    - Download the Desktop Video SDK from the official developer page.
     - Unzip Desktop Video SDK
       ```bash
       unzip Blackmagic_DeckLink_SDK_*.zip
