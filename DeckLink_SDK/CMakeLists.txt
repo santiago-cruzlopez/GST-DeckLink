@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(DeckLink_SDK)
+project(DeckLink-SDK)
 
 set(OSBitness 32)
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -12,7 +12,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${FullOutputDir}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${FullOutputDir}")
 
 # Define DeckLink SDK path
-set(DECKLINK_SDK_PATH "/home/sebastian/Blackmagic_DeckLink_SDK_12.8/Linux" CACHE PATH "Path to DeckLink SDK")
+set(DECKLINK_SDK_PATH "/home/{username}/Blackmagic_DeckLink_SDK_12.8/Linux" CACHE PATH "Path to DeckLink SDK")
 
 # DeckLink SDK source files
 set(DECKLINK_SOURCES
