@@ -56,3 +56,6 @@ conda install -c conda-forge gstreamer gst-plugins-base gst-plugins-good gst-plu
 - [OpenCV Python with Gstreamer Backend](https://discuss.bluerobotics.com/t/opencv-python-with-gstreamer-backend/8842/1)
 - [Guide to build OpenCV from source with GPU support (CUDA and cuDNN)](https://gist.github.com/minhhieutruong0705/8f0ec70c400420e0007c15c98510f133)
 - [Compiling and installing ffmpeg with Decklink support](https://gist.github.com/afriza/879fed4ede539a5a6501e0f046f71463)
+- [FFmpeg for DekTec](https://dektec.com/products/SDK/ffmpeg/linux/#)
+- [Compile FFmpeg for Ubuntu](https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu)
+- [NVIDIA DeepStream SDK](https://developer.nvidia.com/deepstream-sdk)
