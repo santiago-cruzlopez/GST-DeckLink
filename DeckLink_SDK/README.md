@@ -21,16 +21,15 @@ C++ implementation using the Blackmagic Design DeckLink SDK to capture and outpu
     - Confirm installation by running `lspci | grep Blackmagic` or using the Blackmagic Desktop Video Setup utility.
     - Check that `libDeckLinkAPI.so` is installed in the system as well, run `ls -l /usr/lib | grep libDeckLink` for verification.
 2. Obtain the Desktop Video SDK:
-    - Download the Desktop Video SDK from the official developer page.
-    - Unzip Desktop Video SDK
+    - Download and Unzip the Desktop Video SDK from the official developer page.
       ```bash
       unzip Blackmagic_DeckLink_SDK_*.zip
       ```
     - In `CMakeLists.txt`, update `DECKLINK_SDK_PATH` to match your extraction path.
 3. Install Build Tools:
+   - GCC compiler and pkg-config dependencies:
       ```bash
-      sudo apt update
-      sudo apt install cmake build-essential
+      sudo apt install build-essential pkg-config cmake
       ```
 
 ### Project Structure
@@ -59,3 +58,20 @@ cd ../bin/Linux64/Debug
 - **API Failures:** Consult `HRESULT` error codes in the DeckLink SDK Manual for debugging.
 - **Compilation Issues:** Ensure the SDK path is correct and headers like `DeckLinkAPI.h` are found.
 - **Runtime Permissions:** Elevated privileges may be needed for hardware interaction in some setups.
+- **Blackmagic Desktop Video Drivers Installation Fix:** If you encounter a dependency issue where the Blackmagic Desktop Video drivers need the `dkms` (Dynamic Kernel Module Support) package, ensure you install the missing dkms package along with its dependencies before proceeding with the installation of the Blackmagic Desktop Video drivers.
+
+```bash
+# Step 1: Install DKMS and Dependencies
+sudo apt update
+sudo apt install dkms
+
+# Step 2: Install Build Dependencies (if needed)
+sudo apt install build-essential linux-headers-$(uname -r)
+
+# Step 3: Install the Blackmagic Desktop Video Drivers
+sudo dpkg -i desktopvideo_*.deb
+
+# Step 4: Fix Any Remaining Dependencies
+sudo apt --fix-broken install
+sudo reboot  
+```
