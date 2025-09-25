@@ -60,9 +60,15 @@ int main() {
     BMDTimeScale timeScale;
     displayMode->GetFrameRate(&frameDuration, &timeScale);
     double videoFps = static_cast<double>(timeScale) / frameDuration;
+    const char* modeName = nullptr;
+    displayMode->GetName(&modeName);
     displayMode->Release();
 
     std::cout << "SDI Input Initialized: " << frameWidth << "x" << frameHeight << " @ " << std::fixed << std::setprecision(2) << videoFps << " fps" << std::endl;
+    std::cout << "Video Mode: " << (modeName ? modeName : "Unknown") << std::endl;
+    std::cout << "Pixel Format: 10-bit YUV (bmdFormat10BitYUV)" << std::endl;
+    std::cout << "Audio Format: 48 kHz, 16-bit Integer (bmdAudioSampleRate48kHz, bmdAudioSampleType16bitInteger)" << std::endl;
+    std::cout << "Audio Channels: 2 (Stereo)" << std::endl;
 
     OutputCallback* outputCb = new OutputCallback();
     output->SetScheduledFrameCompletionCallback(outputCb);
