@@ -10,7 +10,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 <p align="center">
 
 | Component                 | Requirement	                  | Verification Command               |
-|:-------------------------:| :----------------------------:| :---------------------------------:|
+|:-------------------------:|:-------------------------------:|:----------------------------------:|
 | Operating System          | Ubuntu/Debian Linux	          | `lsb_release -a`                   |
 | Hardware                  | DeckLink Duo card	              | `BlackmagicFirmwareUpdater status` |
 | Build Tools	            | GCC, CMake, pkg-config	      | `gcc --version && cmake --version` |
