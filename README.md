@@ -12,20 +12,19 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 | Component                 | Requirement	                  | Verification Command               |
 |:-------------------------:| :----------------------------:| :---------------------------------:|
 | Operating System          | Ubuntu/Debian Linux	          | `lsb_release -a`                   |
-| Hardware                  | DeckLink Duo card	            | `BlackmagicFirmwareUpdater status` |
-| Build Tools	              | GCC, CMake, pkg-config	      | `gcc --version && cmake --version` |
-| Python 	                  | Python 3.x with gi bindings	  | `python3 -c "import gi"`           |
+| Hardware                  | DeckLink Duo card	              | `BlackmagicFirmwareUpdater status` |
+| Build Tools	            | GCC, CMake, pkg-config	      | `gcc --version && cmake --version` |
+| Python 	                | Python 3.x with gi bindings	  | `python3 -c "import gi"`           |
 
 </p>
 
 ## Core Installation Steps
 
 1. System Dependencies
-    - Install essential build tools and system packages:
+    - Update package information and install the necessary packages:
     ```bash
-    sudo apt update
-    sudo apt install build-essential pkg-config cmake
-    sudo apt install linux-headers-$(uname -r)
+    sudo apt update 
+    sudo apt -y install build-essential pkg-config cmake yasm libsdl2-dev
     ```
 2. DeckLink Drivers Installation
     - Download the latest Desktop Video software for Linux from the official Blackmagic Design website: [Desktop Video Downloads](https://www.blackmagicdesign.com/support/family/capture-and-playback)
