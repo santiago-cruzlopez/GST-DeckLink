@@ -1,7 +1,7 @@
 # GStreamer
 
-GStreamer and the DeckLink SDK repository for C/C++ and Python development, with a specific focus on integrating the Blackmagic DeckLink Duo card. Below are the instructions for installing GStreamer and the Blackmagic Desktop Video Drivers.
-
+GStreamer and the DeckLink SDK are essential for C/C++ and Python development, particularly for integrating the Blackmagic DeckLink Duo card. For a more detailed framework and summary of this GitHub repository, please check the following link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GStreamer). Below, you'll find instructions for installing GStreamer and the Blackmagic Desktop Video Drivers.
+  
 - [DeckLink SDK Installation](https://github.com/santiago-cruzlopez/GStreamer/blob/master/DeckLink_SDK/README.md) 
 - [Application Development Manual](https://gstreamer.freedesktop.org/documentation/application-development/index.html?gi-language=c)
 
