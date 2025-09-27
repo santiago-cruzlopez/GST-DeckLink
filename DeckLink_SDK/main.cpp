@@ -60,9 +60,15 @@ int main() {
     BMDTimeScale timeScale;
     displayMode->GetFrameRate(&frameDuration, &timeScale);
     double videoFps = static_cast<double>(timeScale) / frameDuration;
+    const char* modeName = nullptr;
+    displayMode->GetName(&modeName);
     displayMode->Release();
 
     std::cout << "SDI Input Initialized: " << frameWidth << "x" << frameHeight << " @ " << std::fixed << std::setprecision(2) << videoFps << " fps" << std::endl;
+    std::cout << "Video Mode: " << (modeName ? modeName : "Unknown") << std::endl;
+    std::cout << "Pixel Format: 10-bit YUV (bmdFormat10BitYUV)" << std::endl;
+    std::cout << "Audio Format: 48 kHz, 16-bit Integer (bmdAudioSampleRate48kHz, bmdAudioSampleType16bitInteger)" << std::endl;
+    std::cout << "Audio Channels: 2 (Stereo)" << std::endl;
 
     OutputCallback* outputCb = new OutputCallback();
     output->SetScheduledFrameCompletionCallback(outputCb);
@@ -124,7 +130,13 @@ cleanup:
     std::cout << "Dropped frames: " << inputCb->getDropCount() << std::endl;
     std::cout << "Average FPS: " << std::fixed << std::setprecision(2) << averageFps << std::endl;
     std::cout << "Total audio samples: " << inputCb->getAudioSampleCount() << std::endl;
-    std::cout << "Total runtime: " << totalSeconds << " seconds" << std::endl;
+
+    int hours = static_cast<int>(totalSeconds) / 3600;
+    int minutes = (static_cast<int>(totalSeconds) % 3600) / 60;
+    int seconds = static_cast<int>(totalSeconds) % 60;
+    std::cout << "Total runtime: " << std::setfill('0') << std::setw(2) << hours << ":"
+              << std::setfill('0') << std::setw(2) << minutes << ":"
+              << std::setfill('0') << std::setw(2) << seconds << std::endl;
 
     input->SetCallback(nullptr);
     output->SetScheduledFrameCompletionCallback(nullptr);
@@ -133,8 +145,6 @@ cleanup:
     output->Release();
     inputDevice->Release();
     outputDevice->Release();
-
-    // Release callbacks if necessary, but since they are refcounted, they will delete themselves
 
     return (hr == S_OK) ? 0 : 1;
 }
