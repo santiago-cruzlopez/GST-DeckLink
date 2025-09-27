@@ -1,6 +1,6 @@
 # GStreamer-DeckLink
 
-This document is a comprehensive setup guide for integrating GStreamer and the DeckLink SDK with the Blackmagic DeckLink Duo card. It outlines the system requirements, installation steps, and initial configuration instructions for both C/C++ and Python development. For a more detailed overview and summary of this GitHub repository, please follow this link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GStreamer).
+This document is a comprehensive setup guide for integrating GStreamer and the DeckLink SDK with the Blackmagic DeckLink Duo card. It outlines the system requirements, installation steps, and initial configuration instructions for both C/C++ and Python development. For a more detailed overview and summary of this GitHub repository, please follow this link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GST-DeckLink).
 
 - [Developing with Blackmagic Design](https://www.blackmagicdesign.com/developer/)
 - [GStreamer Application Development Manual](https://gstreamer.freedesktop.org/documentation/application-development/index.html?gi-language=c)
