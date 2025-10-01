@@ -93,7 +93,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 ### Building the Project
 - Path to [DeckLink_SDK](https://github.com/santiago-cruzlopez/GStreamer/tree/master/DeckLink_SDK)
   ```bash
-  cd /GStreamer/DeckLink_SDK
+  cd /GST-DeckLink/DeckLink_SDK
   mkdir build
   cd build
   cmake .. -DCMAKE_BUILD_TYPE=Debug

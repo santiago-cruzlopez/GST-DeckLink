@@ -12,7 +12,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${FullOutputDir}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${FullOutputDir}")
 
 # Define DeckLink SDK path
-set(DECKLINK_SDK_PATH "/home/dev-algo/Blackmagic_DeckLink_SDK_15.0/Linux" CACHE PATH "Path to DeckLink SDK")
+set(DECKLINK_SDK_PATH "/home/$USER/Blackmagic_DeckLink_SDK_15.0/Linux" CACHE PATH "Path to DeckLink SDK")
 
 # DeckLink SDK source files
 set(DECKLINK_SOURCES
