@@ -59,8 +59,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     git clone https://github.com/opencv/opencv.git
     cd opencv
     git checkout 4.12.0
-    mkdir build
-    cd build
+    mkdir build && cd build
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
           -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
           -D PYTHON_EXECUTABLE=$(which python3) \
