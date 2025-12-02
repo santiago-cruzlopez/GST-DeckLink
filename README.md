@@ -24,7 +24,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     - Update package information and install the necessary packages:
     ```bash
     sudo apt update 
-    sudo apt -y install build-essential pkg-config cmake yasm libsdl2-dev
+    sudo apt-get install build-essential pkg-config cmake make unzip yasm dkms git checkinstall libsdl2-dev libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev
     ```
 2. DeckLink Drivers Installation
     - Download the latest Desktop Video software for Linux from the official Blackmagic Design website: [Desktop Video Downloads](https://www.blackmagicdesign.com/support/family/capture-and-playback)
@@ -53,10 +53,44 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
     ```
 
-5. Python Development Setup
+5. OpenCV Python with Gstreamer and FFmpeg Compilation
+    - Clone and Build OpenCV from Source with GStreamer Enabled
+    ```bash
+    git clone https://github.com/opencv/opencv.git
+    cd opencv
+    git checkout 4.12.0
+    mkdir build
+    cd build
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
+          -D PYTHON_EXECUTABLE=$(which python3) \
+          -D WITH_GSTREAMER=ON \
+          -D WITH_FFMPEG=ON \
+          -D WITH_TBB=ON \
+          -D BUILD_EXAMPLES=OFF \
+          -D BUILD_TESTS=OFF \
+          -D BUILD_PERF_TESTS=OFF ..
+
+    make -j$(nproc)
+    make install
+    ```
+    - Verify GStreamer Support:
+    ```bash
+    python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
+    ```
+
+6. Python Environment Setup
     - Install the gi bindings for Python applications:
     ```bash
-    sudo apt install python3-gi gir1.2-gstreamer-1.0
+    sudo apt-get install python3-gi gir1.2-gstreamer-1.0 python3-dev python3-numpy python3-pip python3-testresources
+    ```
+    - UV Installation:
+    ```bash
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    uv init
+    uv add flask requests
+    uv python install 3.10
+    uv venv --python 3.10
     ```
     - Installation for Conda Environments:
     ```bash

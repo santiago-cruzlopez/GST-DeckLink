@@ -60,3 +60,6 @@ dkms.conf
 # Ignore build directories
 build/
 bin/
+
+# Ignore Python virtual environments
+.venv/
