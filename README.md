@@ -53,32 +53,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
     ```
 
-5. OpenCV Python with Gstreamer and FFmpeg Compilation
-    - Clone and Build OpenCV from Source with GStreamer Enabled
-    ```bash
-    git clone https://github.com/opencv/opencv.git
-    cd opencv
-    git checkout 4.12.0
-    mkdir build && cd build
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
-          -D PYTHON_EXECUTABLE=$(which python3) \
-          -D WITH_GSTREAMER=ON \
-          -D WITH_FFMPEG=ON \
-          -D WITH_TBB=ON \
-          -D BUILD_EXAMPLES=OFF \
-          -D BUILD_TESTS=OFF \
-          -D BUILD_PERF_TESTS=OFF ..
-
-    make -j$(nproc)
-    make install
-    ```
-    - Verify GStreamer Support:
-    ```bash
-    python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
-    ```
-
-6. Python Environment Setup
+5. Python Environment Setup
     - Install the gi bindings for Python applications:
     ```bash
     sudo apt-get install python3-gi gir1.2-gstreamer-1.0 python3-dev python3-numpy python3-pip python3-testresources
@@ -103,6 +78,31 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     - Installation for Conda Environments:
     ```bash
     conda install -c conda-forge gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gst-python pygobject
+    ```
+
+6. OpenCV Python with Gstreamer and FFmpeg Compilation
+    - Clone and Build OpenCV from Source with GStreamer Enabled
+    ```bash
+    git clone https://github.com/opencv/opencv.git
+    cd opencv
+    git checkout 4.12.0
+    mkdir build && cd build
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+          -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
+          -D PYTHON_EXECUTABLE=$(which python3) \
+          -D WITH_GSTREAMER=ON \
+          -D WITH_FFMPEG=ON \
+          -D WITH_TBB=ON \
+          -D BUILD_EXAMPLES=OFF \
+          -D BUILD_TESTS=OFF \
+          -D BUILD_PERF_TESTS=OFF ..
+
+    make -j$(nproc)
+    make install
+    ```
+    - Verify GStreamer Support:
+    ```bash
+    python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
     ```
 
 ### Installation Verification
