@@ -1,10 +1,7 @@
-import sys
+# http://docs.gstreamer.com/pages/viewpage.action?pageId=327735
+
 import gi
-
-gi.require_version('GLib', '2.0')
-gi.require_version('GObject', '2.0')
 gi.require_version('Gst', '1.0')
-
 from gi.repository import Gst, GObject, GLib
 
 pipeline = None
@@ -12,11 +9,11 @@ bus = None
 message = None
 
 # initialize GStreamer
-Gst.init(sys.argv[1:])
+Gst.init(None)
 
 # build the pipeline
 pipeline = Gst.parse_launch(
-    "playbin uri=https://gstreamer.freedesktop.org/data/media/sintel_trailer-480p.webm"
+    "playbin uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm"
 )
 
 # start playing
