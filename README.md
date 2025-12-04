@@ -83,13 +83,22 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     ```bash
     sudo apt-get install python3-gi gir1.2-gstreamer-1.0 python3-dev python3-numpy python3-pip python3-testresources
     ```
-    - UV Installation:
+    - UV Installation with Python 3.10 version and GStreamer:
     ```bash
     curl -LsSf https://astral.sh/uv/install.sh | sh
     uv init
     uv add flask requests
     uv python install 3.10
-    uv venv --python 3.10
+    uv python pin 3.10 # Updated `.python-version` from `3.13` -> `3.10`
+
+    uv run --python 3.10 python -c "import sys; print(sys.version)"
+
+    sudo apt install python3-gi python3-gi-cairo gir1.2-glib-2.0 gir1.2-gobject-2.0 gir1.2-gtk-4.0 libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev
+
+    uv pip install pycairo
+    uv pip install PyGObject==3.50.0
+
+    python -c "import gi; gi.require_version('GLib', '2.0'); gi.require_version('GObject', '2.0'); print('Success')"
     ```
     - Installation for Conda Environments:
     ```bash
