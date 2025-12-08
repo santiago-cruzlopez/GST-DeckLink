@@ -81,29 +81,57 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     ```
 
 6. OpenCV Python with Gstreamer and FFmpeg Compilation
-    - Clone and Build OpenCV from Source with GStreamer Enabled
+    - Verify System Dependencies
     ```bash
-    git clone https://github.com/opencv/opencv.git
-    cd opencv
-    git checkout 4.12.0
-    mkdir build && cd build
-    cmake -D CMAKE_BUILD_TYPE=RELEASE \
-          -D CMAKE_INSTALL_PREFIX=$(python3 -c "import sys; print(sys.prefix)") \
-          -D PYTHON_EXECUTABLE=$(which python3) \
-          -D WITH_GSTREAMER=ON \
-          -D WITH_FFMPEG=ON \
-          -D WITH_TBB=ON \
-          -D BUILD_EXAMPLES=OFF \
-          -D BUILD_TESTS=OFF \
-          -D BUILD_PERF_TESTS=OFF ..
+    source .venv/bin/activate
 
-    make -j$(nproc)
-    make install
+    sudo apt update
+
+    sudo apt install -y build-essential cmake git pkg-config libjpeg-dev libtiff-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev libatlas-base-dev gfortran python3-dev python3-numpy libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
     ```
-    - Verify GStreamer Support:
+    - Purge Conflicting OpenCV Installations:
     ```bash
-    python3 -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
+    uv pip uninstall opencv-python opencv-contrib-python
+    sudo apt purge -y *libopencv*
     ```
+    - Clean and Reclone Sources:
+    ```bash
+    # Remove existing clones
+    rm -rf ~/opencv ~/opencv_contrib
+
+    cd ~
+    git clone https://github.com/opencv/opencv.git && cd opencv && git checkout 4.10.0
+    cd ~
+    git clone https://github.com/opencv/opencv_contrib.git && cd opencv_contrib && git checkout 4.10.0
+    ```
+    - Run CMake with enhanced flags to force detection:
+    ```bash
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+      -D CMAKE_INSTALL_PREFIX=/usr/local \
+      -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+      -D BUILD_opencv_python3=ON \
+      -D PYTHON3_EXECUTABLE=$(which python) \
+      -D PYTHON3_INCLUDE_DIR=$(python -c "import sysconfig; print(sysconfig.get_path('include'))") \
+      -D PYTHON3_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR') + '/' + sysconfig.get_config_var('LDLIBRARY'))") \
+      -D PYTHON3_PACKAGES_PATH=$(python -c "import sysconfig; print(sysconfig.get_path('platlib'))") \
+      -D WITH_GSTREAMER=ON \
+      -D WITH_GSTREAMER_0_10=OFF \
+      -D WITH_FFMPEG=ON \
+      -D BUILD_EXAMPLES=OFF ..
+    ```
+    - Compile, Install, and Verify:
+    ```bash
+    make -j$(nproc)
+    sudo make install && sudo ldconfig
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+    # Test in UV env
+    python -c "import cv2; print(cv2.__version__); print(cv2.getBuildInformation())"
+
+    # OpenCV Test with GStreamer
+    python -c "import cv2; cap = cv2.VideoCapture('videotestsrc ! video/x-raw, width=640, height=480 ! videoconvert ! appsink', cv2.CAP_GSTREAMER); print('Success' if cap.isOpened() else 'Failure')"
+    ```
+
 
 ### Installation Verification
 - Verify DeckLink hardware is properly detected:
@@ -117,11 +145,6 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
   ```bash
   gst-inspect-1.0 --version
   gst-device-monitor-1.0 Video/Source
-  ```
-- Check the Python Environment:
-  ``` bash
-  python3 -c "import gi"
-  conda list | grep gst
   ```
 
 ## Building C++ Applications with Blackmagic Design DeckLink SDK
