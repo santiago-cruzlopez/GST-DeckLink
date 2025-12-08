@@ -103,6 +103,8 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     git clone https://github.com/opencv/opencv.git && cd opencv && git checkout 4.10.0
     cd ~
     git clone https://github.com/opencv/opencv_contrib.git && cd opencv_contrib && git checkout 4.10.0
+
+    cd ~/opencv && rm -rf build && mkdir build && cd build
     ```
     - Run CMake with enhanced flags to force detection:
     ```bash
