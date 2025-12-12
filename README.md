@@ -5,6 +5,17 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 - [Developing with Blackmagic Design](https://www.blackmagicdesign.com/developer/)
 - [GStreamer Application Development Manual](https://gstreamer.freedesktop.org/documentation/application-development/index.html?gi-language=c)
 
+## Table of Contents
+
+
+## Prerequisites
+1. [Prerequisites](#prerequisites)
+2. [Installation](#core-installation-steps)
+3. [OpenCV from source with GPU and GStreamer](#opencv-from-source-with-gpu-and-gstreamer)
+4. [Building C++ Applications with Blackmagic Design DeckLink SDK](#building-c-applications-with-blackmagic-design-decklink-sdk)
+5. [Building C Applications with GStreamer](#building-c-applications-with-gstreamer)
+6. [Troubleshooting](#troubleshooting)
+
 ## Prerequisites
 
 <p align="center">
@@ -14,7 +25,8 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 | Operating System          | Ubuntu/Debian Linux	          | `lsb_release -a`                   |
 | Hardware                  | DeckLink Duo card	              | `BlackmagicFirmwareUpdater status` |
 | Build Tools	            | GCC, CMake, pkg-config	      | `gcc --version && cmake --version` |
-| Python 	                | Python 3.x with gi bindings	  | `python3 -c "import gi"`           |
+| Python 	                | Python 3.10 with gi bindings	  | `python3 -c "import gi"`           |
+| OpenCV 	                | 4.10.0 version             	  | `python -c "import cv2; print(cv2.__version__);"` |
 
 </p>
 
@@ -80,8 +92,11 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     conda install -c conda-forge gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gst-python pygobject
     ```
 
-6. OpenCV Python with Gstreamer and FFmpeg Compilation
-    - Verify System Dependencies
+## OpenCV from source with GPU and GStreamer
+1. Pre-installation Actions:
+   - Follow the [CUDA Installation Guide for Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) and [Uninstall the built OpenCV](https://gist.github.com/minhhieutruong0705/8f0ec70c400420e0007c15c98510f133#uninstall-built-opencv) if there is a built installation of **OpenCV** already.
+   - Check [CUDA GPU Compute Capability](https://developer.nvidia.com/cuda-gpus).
+   - Watch this [YouTube Tutorial](https://youtu.be/whAFl-izD-4?si=RZI21OopTbNnmhag).
     ```bash
     source .venv/bin/activate
 
@@ -89,12 +104,32 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 
     sudo apt install -y build-essential cmake git pkg-config libjpeg-dev libtiff-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev libatlas-base-dev gfortran python3-dev python3-numpy libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
     ```
-    - Purge Conflicting OpenCV Installations:
+2. [Download the NVIDIA CUDA Toolkit](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local)
+   ```bash
+   wget https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda-repo-ubuntu2204-12-9-local_12.9.1-575.57.08-1_amd64.deb 
+   sudo dpkg -i cuda-repo-ubuntu2204-12-9-local_12.9.1-575.57.08-1_amd64.deb
+   sudo cp /var/cuda-repo-ubuntu2204-12-9-local/cuda-*-keyring.gpg /usr/share/keyrings/
+   sudo apt-get update
+   sudo apt-get -y install cuda-toolkit-12-9
+   sudo reboot
+   ```
+3. [Download cuDNN 9.11.0](https://developer.nvidia.com/cudnn-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local&Configuration=Full), Check other [cuDNN versions](https://developer.nvidia.com/rdp/cudnn-archive). 
+   ```bash
+   nvcc --version
+   wget https://developer.download.nvidia.com/compute/cudnn/9.11.0/local_installers/cudnn-local-repo-ubuntu2204-9.11.0_1.0-1_amd64.deb 
+   sudo dpkg -i cudnn-local-repo-ubuntu2204-9.11.0_1.0-1_amd64.deb
+   sudo cp /var/cudnn-local-repo-ubuntu2204-9.11.0/cudnn-*-keyring.gpg /usr/share/keyrings/
+   sudo apt-get update
+   sudo apt-get -y install cudnn
+   sudo reboot
+   ```
+
+4. Purge Conflicting OpenCV Installations:
     ```bash
     uv pip uninstall opencv-python opencv-contrib-python
     sudo apt purge -y *libopencv*
     ```
-    - Clean and Reclone Sources:
+5. Clone OpenCV and OpenCV Contrib Repositories
     ```bash
     # Remove existing clones
     rm -rf ~/opencv ~/opencv_contrib
@@ -106,7 +141,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 
     cd ~/opencv && rm -rf build && mkdir build && cd build
     ```
-    - Run CMake with enhanced flags to force detection:
+6. Build the project with CMake
     ```bash
     cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=/usr/local \
@@ -121,7 +156,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
       -D WITH_FFMPEG=ON \
       -D BUILD_EXAMPLES=OFF ..
     ```
-    - Compile, Install, and Verify:
+7. Compile, Install, and Verify:
     ```bash
     make -j$(nproc)
     sudo make install && sudo ldconfig
@@ -133,7 +168,6 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     # OpenCV Test with GStreamer
     python -c "import cv2; cap = cv2.VideoCapture('videotestsrc ! video/x-raw, width=640, height=480 ! videoconvert ! appsink', cv2.CAP_GSTREAMER); print('Success' if cap.isOpened() else 'Failure')"
     ```
-
 
 ### Installation Verification
 - Verify DeckLink hardware is properly detected:
