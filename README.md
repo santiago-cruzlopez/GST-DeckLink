@@ -1,14 +1,11 @@
 # GStreamer-DeckLink
 
-This document is a comprehensive setup guide for integrating GStreamer and the DeckLink SDK with the Blackmagic DeckLink Duo card. It outlines the system requirements, installation steps, and initial configuration instructions for both C/C++ and Python development. For a more detailed overview and summary of this GitHub repository, please follow this link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GST-DeckLink).
+This document is a comprehensive setup guide for integrating GStreamer and the DeckLink SDK with the Blackmagic DeckLink Duo card. It outlines the system requirements, installation steps, and initial configuration instructions for both C/C++ and Python development. It also includes a guide to build OpenCV from source with GPU support (CUDA and cuDNN) with GStreamer for Computer Vision tasks. For a more detailed overview and summary of this GitHub repository, please follow this link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GST-DeckLink).
 
 - [Developing with Blackmagic Design](https://www.blackmagicdesign.com/developer/)
 - [GStreamer Application Development Manual](https://gstreamer.freedesktop.org/documentation/application-development/index.html?gi-language=c)
 
 ## Table of Contents
-
-
-## Prerequisites
 1. [Prerequisites](#prerequisites)
 2. [Installation](#core-installation-steps)
 3. [OpenCV from source with GPU and GStreamer](#opencv-from-source-with-gpu-and-gstreamer)
@@ -22,8 +19,9 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 
 | Component                 | Requirement	                  | Verification Command               |
 |:-------------------------:|:-------------------------------:|:----------------------------------:|
-| Operating System          | Ubuntu/Debian Linux	          | `lsb_release -a`                   |
+| Operating System          | Ubuntu 22.04.5 LTS	          | `lsb_release -a`                   |
 | Hardware                  | DeckLink Duo card	              | `BlackmagicFirmwareUpdater status` |
+| Hardware                  | NVIDIA GeForce RTX 5090         | `nvidia-smi`                       |
 | Build Tools	            | GCC, CMake, pkg-config	      | `gcc --version && cmake --version` |
 | Python 	                | Python 3.10 with gi bindings	  | `python3 -c "import gi"`           |
 | OpenCV 	                | 4.10.0 version             	  | `python -c "import cv2; print(cv2.__version__);"` |
@@ -38,6 +36,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     sudo apt update 
     sudo apt-get install build-essential pkg-config cmake make unzip yasm dkms git checkinstall libsdl2-dev libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev
     ```
+    
 2. DeckLink Drivers Installation
     - Download the latest Desktop Video software for Linux from the official Blackmagic Design website: [Desktop Video Downloads](https://www.blackmagicdesign.com/support/family/capture-and-playback)
     ```bash
@@ -46,12 +45,19 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     sudo dpkg -i desktopvideo_*.deb
     sudo apt-get install -f
     ```
-    - Verify firmware status and update if necessary:    
+    - Verify DeckLink Hardware/Firmware status and update if necessary:    
     ```bash
+    lspci | grep Blackmagic
+    
     BlackmagicFirmwareUpdater status
     BlackmagicFirmwareUpdater update 0
+
+    # Check that libDeckLinkAPI.so is correctly installed
+    ls -l /usr/lib | grep libDeckLink
+    
     sudo reboot
     ```
+
 3. DeckLink SDK Configuration
     - Download and unzip the Desktop Video SDK from the official developer page.
     ```bash
@@ -64,6 +70,11 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     ```bash
     sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
     ```
+    - Verify that GStreamer is installed correctly
+    ```bash
+    gst-inspect-1.0 --version
+    gst-device-monitor-1.0 Video/Source
+    ```
 
 5. Python Environment Setup
     - Install the gi bindings for Python applications:
@@ -73,6 +84,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     - UV Installation with Python 3.10 version and GStreamer:
     ```bash
     curl -LsSf https://astral.sh/uv/install.sh | sh
+    
     uv init
     uv add flask requests
     uv python install 3.10
@@ -93,6 +105,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     ```
 
 ## OpenCV from source with GPU and GStreamer
+
 1. Pre-installation Actions:
    - Follow the [CUDA Installation Guide for Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) and [Uninstall the built OpenCV](https://gist.github.com/minhhieutruong0705/8f0ec70c400420e0007c15c98510f133#uninstall-built-opencv) if there is a built installation of **OpenCV** already.
    - Check [CUDA GPU Compute Capability](https://developer.nvidia.com/cuda-gpus).
@@ -123,7 +136,6 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
    sudo apt-get -y install cudnn
    sudo reboot
    ```
-
 4. Purge Conflicting OpenCV Installations:
     ```bash
     uv pip uninstall opencv-python opencv-contrib-python
@@ -169,20 +181,6 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     python -c "import cv2; cap = cv2.VideoCapture('videotestsrc ! video/x-raw, width=640, height=480 ! videoconvert ! appsink', cv2.CAP_GSTREAMER); print('Success' if cap.isOpened() else 'Failure')"
     ```
 
-### Installation Verification
-- Verify DeckLink hardware is properly detected:
-  ```bash
-  lspci | grep Blackmagic
-  
-  # Check that libDeckLinkAPI.so is correctly installed
-  ls -l /usr/lib | grep libDeckLink
-  ```
-- Verify that GStreamer is installed correctly
-  ```bash
-  gst-inspect-1.0 --version
-  gst-device-monitor-1.0 Video/Source
-  ```
-
 ## Building C++ Applications with Blackmagic Design DeckLink SDK
 
 ### Project Structure
@@ -205,8 +203,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
   cd ../bin/Linux64/Debug
   ./DeckLink-SDK
   ```
-- Terminate with Ctrl+C to trigger cleanup, displaying the end time and performance metrics.
-
+- Terminate with Ctrl+C to trigger cleanup, displaying the end time and performance metrics
 
 ## Building C Applications with GStreamer
 - Clone the GStreamer Repository, build and compile the first script tutorial:
