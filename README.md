@@ -1,6 +1,8 @@
 # GStreamer-DeckLink
 
-This document is a comprehensive setup guide for integrating GStreamer and the DeckLink SDK with the Blackmagic DeckLink Duo card. It outlines the system requirements, installation steps, and initial configuration instructions for both C/C++ and Python development. It also includes a guide to build OpenCV from source with GPU support (CUDA and cuDNN) with GStreamer for Computer Vision tasks. For a more detailed overview and summary of this GitHub repository, please follow this link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GST-DeckLink).
+This document is a comprehensive setup guide for integrating GStreamer and the DeckLink SDK with the Blackmagic DeckLink Duo card. It outlines the system requirements, installation steps, and initial configuration instructions for both C/C++ and Python development. It also includes a guide to build OpenCV from source with GPU support (CUDA and cuDNN) with GStreamer for Computer Vision tasks. 
+
+For a more detailed overview and summary of this GitHub repository, please follow this link: [DeepWiki Index](https://deepwiki.com/santiago-cruzlopez/GST-DeckLink).
 
 - [Developing with Blackmagic Design](https://www.blackmagicdesign.com/developer/)
 - [GStreamer Application Development Manual](https://gstreamer.freedesktop.org/documentation/application-development/index.html?gi-language=c)
@@ -211,6 +213,17 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
       -D WITH_GSTREAMER=ON \
       -D WITH_GSTREAMER_0_10=OFF \
       -D WITH_FFMPEG=ON \
+      -D WITH_CUDA=ON \
+      -D WITH_CUDNN=ON \
+      -D OPENCV_DNN_CUDA=ON \
+      -D CUDA_ARCH_BIN=10.0 \
+      -D ENABLE_FAST_MATH=ON \
+      -D CUDA_FAST_MATH=ON \
+      -D WITH_CUFFT=ON \
+      -D WITH_CUBLAS=ON \
+      -D WITH_V4L=ON \
+      -D WITH_OPENCL=ON \
+      -D WITH_OPENGL=ON \
       -D BUILD_EXAMPLES=OFF ..
     ```
 7. Compile, Install, and Verify:
