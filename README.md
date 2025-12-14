@@ -30,14 +30,58 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
 
 ## Core Installation Steps
 
-1. System Dependencies
-    - Update package information and install the necessary packages:
+1. System Dependencies and Packages
+    - Update package information and install the required packages:
     ```bash
-    sudo apt update 
-    sudo apt-get install build-essential pkg-config cmake make unzip yasm dkms git checkinstall libsdl2-dev libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev
+    sudo apt update && upgrade
+    sudo apt-get install build-essential pkg-config cmake make unzip yasm dkms git checkinstall libsdl2-dev libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev    
     ```
+    - Image I/O, Video and Audio, and OpenCore for speed codec:
+    ```bash
+    # Image I/O:
+    sudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+
+    # Video and Audio:
+    sudo apt install libavformat-dev libswscale-dev libavresample-dev
+    sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+    sudo apt install libxvidcore-dev x264 libx264-dev libfaac-dev libmp3lame-dev libtheora-dev
+    sudo apt install libfaac-dev libmp3lame-dev libvorbis-dev
+
+    # OpenCore for Speed Codec:
+    sudo apt install libopencore-amrnb-dev libopencore-amrwb-dev
+    ```
+    - GTK for OpenCV Highgui:
+    ```bash
+    sudo apt-get install libgtk-3-dev
+    ```
+    - Parallelism C++ for CPU:
+    ```bash
+    sudo apt-get install libtbb2 libtbb-dev 
+    ```
+    - OpenCV Optimization:
+    ```bash
+    sudo apt-get install libatlas-base-dev gfortran
+    sudo apt-get install libprotobuf-dev protobuf-compiler
+    sudo apt-get install libgoogle-glog-dev libgflags-dev
+    sudo apt-get install libgphoto2-dev libeigen3-dev libhdf5-dev doxygen
+    ```
+
+2. NVIDIA Drivers
+   - Get all the [NVIDIA Linux Graphics Driver](https://www.nvidia.com/en-us/drivers/unix/) for Linux-x86_64:
+   ```bash 
+   cd ~/Downloads/
+   wget https://download.nvidia.com/XFree86/Linux-x86_64/570.133.07/NVIDIA-Linux-x86_64-570.133.07.run
+   chmod +x NVIDIA-Linux-x86_64-570.133.07.run
+   sudo ./NVIDIA-Linux-x86_64-570.133.07.run
+   sudo reboot
+   ```
+   - Verify NVIDIA Drivers:
+   ```bash
+   nvidia-smi
+   dpkg -l | grep nvidia-driver
+   ```
     
-2. DeckLink Drivers Installation
+3. DeckLink Drivers Installation
     - Download the latest Desktop Video software for Linux from the official Blackmagic Design website: [Desktop Video Downloads](https://www.blackmagicdesign.com/support/family/capture-and-playback)
     ```bash
     tar -xf Blackmagic_Desktop_Video_Linux_*.tar
@@ -58,14 +102,14 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     sudo reboot
     ```
 
-3. DeckLink SDK Configuration
+4. DeckLink SDK Configuration
     - Download and unzip the Desktop Video SDK from the official developer page.
     ```bash
     unzip Blackmagic_DeckLink_SDK_*.zip
     ```
     - Update the `DECKLINK_SDK_PATH` variable in [CMakeLists.txt](https://github.com/santiago-cruzlopez/GStreamer/blob/master/DeckLink_SDK/CMakeLists.txt) to point to your SDK extraction directory.
 
-4. GStreamer Framework Installation
+5. GStreamer Framework Installation
     - Install GStreamer development packages and plugins:
     ```bash
     sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
@@ -76,7 +120,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     gst-device-monitor-1.0 Video/Source
     ```
 
-5. Python Environment Setup
+6. Python Environment Setup
     - Install the gi bindings for Python applications:
     ```bash
     sudo apt-get install python3-gi gir1.2-gstreamer-1.0 python3-dev python3-numpy python3-pip python3-testresources
@@ -101,6 +145,7 @@ This document is a comprehensive setup guide for integrating GStreamer and the D
     ```
     - Installation for Conda Environments:
     ```bash
+    conda install -c conda-forge gcc=12 gxx_linux-64=12 
     conda install -c conda-forge gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gst-python pygobject
     ```
 
