@@ -132,7 +132,7 @@ HTTP URL directly — the resilient UDP query string does not apply. Replace the
 with the playlist you want to check.
 
 ```bash
-ffmpeg -i "http://rt-esp.rttv.com/dvr/rtesp/playlist_4500Kb.m3u8" -f null -
+ffmpeg -i "http://example.com/example.m3u8" -f null -
 ```
 
 > Add `-loglevel verbose` and pipe to `grep` (as in command 7) to log only the
